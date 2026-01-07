@@ -1,13 +1,25 @@
-# Open Deep Research
+# CodeGuide Deep Research API
 
-An AI-powered research assistant that performs iterative, deep research on any topic by combining search engines, web scraping, and large language models.
+[![Alcademy](alcademy-logo.png)](https://codeguide.dev)
 
-The goal of this repo is to provide the simplest implementation of a deep research agent - e.g. an agent that can refine its research direction over time and deep dive into a topic. Goal is to keep the repo size at <500 LoC so it is easy to understand and build on top of.
+> This is a fork of [Open Deep Research](https://github.com/dzhng/deep-research) by [@dzhng](https://x.com/dzhng), enhanced with REST API implementation and integrated into the CodeGuide platform.
 
-If you like this project, please consider starring it and giving me a follow on [X/Twitter](https://x.com/dzhng). This project is sponsored by [Aomni](https://aomni.com).
+An AI-powered research assistant that performs iterative, deep research on any topic by combining search engines, web scraping, and large language models. This enhanced version provides a REST API interface and is integrated into the [CodeGuide platform](https://app.codeguide.dev).
+
+The core functionality remains true to the original project's goal of providing a simple implementation of a deep research agent - one that can refine its research direction overtime and deep dive into a topic.
+
+## Access
+<img width="692" alt="Screenshot 2025-02-07 at 22 37 01" src="https://github.com/user-attachments/assets/9f7566f6-860e-41fc-9e68-54b6e9ca09a6" />
+
+This service is available to all CodeGuide members at [app.codeguide.dev](https://app.codeguide.dev).
+You'll have access to the following features:
+- User-friendly interface for conducting research
+- Real-time results and generated reports
+- Integrations with other CodeGuide features (coming soon)
+
+
 
 ## How It Works
-
 ```mermaid
 flowchart TB
     subgraph Input
@@ -67,6 +79,9 @@ flowchart TB
 
 ## Features
 
+- **REST API Implementation**: Full REST API support with comprehensive documentation
+- **CodeGuide Integration**: Seamlessly integrated with the CodeGuide platform
+- **API Documentation**: Interactive Swagger/OpenAPI documentation
 - **Iterative Research**: Performs deep research by iteratively generating search queries, processing results, and diving deeper based on findings
 - **Intelligent Query Generation**: Uses LLMs to generate targeted search queries based on research goals and previous findings
 - **Depth & Breadth Control**: Configurable parameters to control how wide (breadth) and deep (depth) the research goes
@@ -74,16 +89,73 @@ flowchart TB
 - **Comprehensive Reports**: Produces detailed markdown reports with findings and sources
 - **Concurrent Processing**: Handles multiple searches and result processing in parallel for efficiency
 
-## Requirements
+## API Usage
 
-- Node.js environment
-- API keys for:
-  - Firecrawl API (for web search and content extraction)
-  - OpenAI API (for o3 mini model)
+You can access the API locally or by self-hosting it.
 
-## Setup
+### Authentication
 
-### Node.js
+All API requests require authentication that will be defined in the `.env` file.
+
+```bash
+# .env
+API_KEY="your_development_api_key"
+```
+
+### Research Flow
+
+The research process consists of three main steps:
+
+1. **Generate Clarifying Questions**
+```bash
+# Step 1: Generate questions to better understand the research direction
+curl -X POST http://localhost:3000/api/research/questions \
+  -H "x-api-key: API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Your research query",
+    "numQuestions": 3
+  }'
+```
+
+2. **Perform Deep Research**
+```bash
+# Step 2: Conduct the research with your answers to the clarifying questions
+curl -X POST http://localhost:3000/api/research \
+  -H "x-api-key: API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Your research query",
+    "breadth": 6,
+    "depth": 3,
+    "questionAnswers": [
+      {
+        "question": "Question from step 1",
+        "answer": "Your answer to the question"
+      }
+    ]
+  }'
+```
+
+3. **Generate Final Report**
+```bash
+# Step 3: Generate a comprehensive report using the research results
+curl -X POST http://localhost:3000/api/report \
+  -H "x-api-key: API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Original research query",
+    "learnings": ["Learning 1", "Learning 2"],  # From research response
+    "visitedUrls": ["url1", "url2"]            # From research response
+  }'
+```
+
+The flow allows for an iterative and thorough research process:
+1. First, generate clarifying questions to better understand the research needs
+2. Use these questions and your answers to guide the deep research process
+3. Finally, generate a comprehensive report based on the research findings
+
+## Local Development Setup
 
 1. Clone the repository
 2. Install dependencies:
@@ -92,7 +164,7 @@ flowchart TB
 npm install
 ```
 
-3. Set up environment variables in a `.env.local` file:
+3. Set up environment variables in a `.env` file:
 
 ```bash
 FIRECRAWL_KEY="your_firecrawl_key"
@@ -100,109 +172,26 @@ FIRECRAWL_KEY="your_firecrawl_key"
 # FIRECRAWL_BASE_URL="http://localhost:3002"
 
 OPENAI_KEY="your_openai_key"
+
+# API Configuration
+PORT=3000
+API_KEY="your_development_api_key"
 ```
 
-To use local LLM, comment out `OPENAI_KEY` and instead uncomment `OPENAI_ENDPOINT` and `OPENAI_MODEL`:
+## Running Locally
 
-- Set `OPENAI_ENDPOINT` to the address of your local server (eg."http://localhost:1234/v1")
-- Set `OPENAI_MODEL` to the name of the model loaded in your local server.
-
-### Docker
-
-1. Clone the repository
-2. Rename `.env.example` to `.env.local` and set your API keys
-
-3. Run `docker build -f Dockerfile`
-
-4. Run the Docker image:
+Start the API server:
 
 ```bash
-docker compose up -d
+npm run dev
 ```
 
-5. Execute `npm run docker` in the docker service:
-
-```bash
-docker exec -it deep-research npm run docker
-```
-
-## Usage
-
-Run the research assistant:
-
-```bash
-npm start
-```
-
-You'll be prompted to:
-
-1. Enter your research query
-2. Specify research breadth (recommended: 3-10, default: 4)
-3. Specify research depth (recommended: 1-5, default: 2)
-4. Answer follow-up questions to refine the research direction
-
-The system will then:
-
-1. Generate and execute search queries
-2. Process and analyze search results
-3. Recursively explore deeper based on findings
-4. Generate a comprehensive markdown report
-
-The final report will be saved as `report.md` or `answer.md` in your working directory, depending on which modes you selected.
-
-### Concurrency
-
-If you have a paid version of Firecrawl or a local version, feel free to increase the `ConcurrencyLimit` by setting the `CONCURRENCY_LIMIT` environment variable so it runs faster.
-
-If you have a free version, you may sometimes run into rate limit errors, you can reduce the limit to 1 (but it will run a lot slower).
-
-### DeepSeek R1
-
-Deep research performs great on R1! We use [Fireworks](http://fireworks.ai) as the main provider for the R1 model. To use R1, simply set a Fireworks API key:
-
-```bash
-FIREWORKS_KEY="api_key"
-```
-
-The system will automatically switch over to use R1 instead of `o3-mini` when the key is detected.
-
-### Custom endpoints and models
-
-There are 2 other optional env vars that lets you tweak the endpoint (for other OpenAI compatible APIs like OpenRouter or Gemini) as well as the model string.
-
-```bash
-OPENAI_ENDPOINT="custom_endpoint"
-CUSTOM_MODEL="custom_model"
-```
-
-## How It Works
-
-1. **Initial Setup**
-
-   - Takes user query and research parameters (breadth & depth)
-   - Generates follow-up questions to understand research needs better
-
-2. **Deep Research Process**
-
-   - Generates multiple SERP queries based on research goals
-   - Processes search results to extract key learnings
-   - Generates follow-up research directions
-
-3. **Recursive Exploration**
-
-   - If depth > 0, takes new research directions and continues exploration
-   - Each iteration builds on previous learnings
-   - Maintains context of research goals and findings
-
-4. **Report Generation**
-   - Compiles all findings into a comprehensive markdown report
-   - Includes all sources and references
-   - Organizes information in a clear, readable format
-  
-## Community implementations
-
-**Python**: https://github.com/Finance-LLMs/deep-research-python
+The API will be available at `http://localhost:3000` with documentation at `http://localhost:3000/api-docs`.
 
 ## License
 
 MIT License - feel free to use and modify as needed.
+
+## Acknowledgments
+
+This project is a fork of [Open Deep Research](https://github.com/dzhng/deep-research) by [@dzhng](https://x.com/dzhng). We've extended it with REST API capabilities and integrated it into the CodeGuide platform while maintaining the core functionality of the original project.

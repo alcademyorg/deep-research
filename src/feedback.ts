@@ -1,8 +1,17 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
 
-import { getModel } from './ai/providers';
-import { systemPrompt } from './prompt';
+import { o3MiniModel } from './ai/providers.js';
+import { systemPrompt } from './prompt.js';
+
+export type FeedbackResult = {
+  questions: string[];
+  usage: {
+    totalTokens: number;
+    promptTokens: number;
+    completionTokens: number;
+  };
+};
 
 export async function generateFeedback({
   query,
@@ -10,9 +19,9 @@ export async function generateFeedback({
 }: {
   query: string;
   numQuestions?: number;
-}) {
+}): Promise<FeedbackResult> {
   const userFeedback = await generateObject({
-    model: getModel(),
+    model: o3MiniModel,
     system: systemPrompt(),
     prompt: `Given the following query from the user, ask some follow up questions to clarify the research direction. Return a maximum of ${numQuestions} questions, but feel free to return less if the original query is clear: <query>${query}</query>`,
     schema: z.object({
@@ -24,5 +33,8 @@ export async function generateFeedback({
     }),
   });
 
-  return userFeedback.object.questions.slice(0, numQuestions);
+  return {
+    questions: userFeedback.object.questions.slice(0, numQuestions),
+    usage: userFeedback.usage,
+  };
 }

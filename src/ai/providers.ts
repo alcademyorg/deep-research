@@ -1,71 +1,33 @@
-import { createFireworks } from '@ai-sdk/fireworks';
 import { createOpenAI } from '@ai-sdk/openai';
-import {
-  extractReasoningMiddleware,
-  LanguageModelV1,
-  wrapLanguageModel,
-} from 'ai';
 import { getEncoding } from 'js-tiktoken';
 
-import { RecursiveCharacterTextSplitter } from './text-splitter';
+import { RecursiveCharacterTextSplitter } from './text-splitter.js';
+
 
 // Providers
-const openai = process.env.OPENAI_KEY
-  ? createOpenAI({
-      apiKey: process.env.OPENAI_KEY,
-      baseURL: process.env.OPENAI_ENDPOINT || 'https://api.openai.com/v1',
-    })
-  : undefined;
 
-const fireworks = process.env.FIREWORKS_KEY
-  ? createFireworks({
-      apiKey: process.env.FIREWORKS_KEY,
-    })
-  : undefined;
-
-const customModel = process.env.CUSTOM_MODEL
-  ? openai?.(process.env.CUSTOM_MODEL, {
-      structuredOutputs: true,
-    })
-  : undefined;
+const openai = createOpenAI({
+  apiKey: process.env.OPENAI_KEY!,
+});
 
 // Models
 
-const o3MiniModel = openai?.('o3-mini', {
+export const gpt4Model = openai('gpt-4o', {
+  structuredOutputs: true,
+});
+export const gpt4MiniModel = openai('gpt-4o-mini', {
+  structuredOutputs: true,
+});
+export const o3MiniModel = openai('o3-mini', {
   reasoningEffort: 'medium',
   structuredOutputs: true,
 });
-
-const deepSeekR1Model = fireworks
-  ? wrapLanguageModel({
-      model: fireworks(
-        'accounts/fireworks/models/deepseek-r1',
-      ) as LanguageModelV1,
-      middleware: extractReasoningMiddleware({ tagName: 'think' }),
-    })
-  : undefined;
-
-export function getModel(): LanguageModelV1 {
-  if (customModel) {
-    return customModel;
-  }
-
-  const model = deepSeekR1Model ?? o3MiniModel;
-  if (!model) {
-    throw new Error('No model found');
-  }
-
-  return model as LanguageModelV1;
-}
 
 const MinChunkSize = 140;
 const encoder = getEncoding('o200k_base');
 
 // trim prompt to maximum context size
-export function trimPrompt(
-  prompt: string,
-  contextSize = Number(process.env.CONTEXT_SIZE) || 128_000,
-) {
+export function trimPrompt(prompt: string, contextSize = 120_000) {
   if (!prompt) {
     return '';
   }
