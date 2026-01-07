@@ -2,7 +2,7 @@
 
 [![Alcademy](alcademy-logo.png)](https://github.com/alcademyorg)
 
-> This is a fork of [Open Deep Research](https://github.com/dzhng/deep-research) by [@dzhng](https://x.com/dzhng), enhanced with REST API implementation and integrated into the CodeGuide platform.
+> This is a fork of [Open Deep Research](https://github.com/dzhng/deep-research) by [@dzhng](https://x.com/dzhng), enhanced with REST API implementation and integrated into the Alcademy platform.
 
 An AI-powered research assistant that performs iterative, deep research on any topic by combining search engines, web scraping, and large language models. This enhanced version provides a REST API interface and is integrated into the [Alcademy platform](https://github.com/alcademyorg).
 
@@ -11,11 +11,11 @@ The core functionality remains true to the original project's goal of providing 
 ## Access
 <img width="692" alt="Screenshot 2025-02-07 at 22 37 01" src="https://github.com/user-attachments/assets/9f7566f6-860e-41fc-9e68-54b6e9ca09a6" />
 
-This service is available to all Alcademy members at [app.Alcademy.dev](https://github.com/alcademyorg).
+This service is available to all Alcademy members at [app.alcademy.dev](https://github.com/alcademyorg).
 You'll have access to the following features:
 - User-friendly interface for conducting research
 - Real-time results and generated reports
-- Integrations with other CodeGuide features (coming soon)
+- Integrations with other Alcademy features (coming soon)
 
 
 
@@ -80,7 +80,7 @@ flowchart TB
 ## Features
 
 - **REST API Implementation**: Full REST API support with comprehensive documentation
-- **CodeGuide Integration**: Seamlessly integrated with the CodeGuide platform
+- **Alcademy Integration**: Seamlessly integrated with the Alcademy platform
 - **API Documentation**: Interactive Swagger/OpenAPI documentation
 - **Iterative Research**: Performs deep research by iteratively generating search queries, processing results, and diving deeper based on findings
 - **Intelligent Query Generation**: Uses LLMs to generate targeted search queries based on research goals and previous findings
