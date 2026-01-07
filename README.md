@@ -1,17 +1,17 @@
-# CodeGuide Deep Research API
+# Alcademy Deep Research API
 
-[![Alcademy](alcademy-logo.png)](https://codeguide.dev)
+[![Alcademy](alcademy-logo.png)](https://github.com/alcademyorg)
 
 > This is a fork of [Open Deep Research](https://github.com/dzhng/deep-research) by [@dzhng](https://x.com/dzhng), enhanced with REST API implementation and integrated into the CodeGuide platform.
 
-An AI-powered research assistant that performs iterative, deep research on any topic by combining search engines, web scraping, and large language models. This enhanced version provides a REST API interface and is integrated into the [CodeGuide platform](https://app.codeguide.dev).
+An AI-powered research assistant that performs iterative, deep research on any topic by combining search engines, web scraping, and large language models. This enhanced version provides a REST API interface and is integrated into the [Alcademy platform](https://github.com/alcademyorg).
 
 The core functionality remains true to the original project's goal of providing a simple implementation of a deep research agent - one that can refine its research direction overtime and deep dive into a topic.
 
 ## Access
 <img width="692" alt="Screenshot 2025-02-07 at 22 37 01" src="https://github.com/user-attachments/assets/9f7566f6-860e-41fc-9e68-54b6e9ca09a6" />
 
-This service is available to all CodeGuide members at [app.codeguide.dev](https://app.codeguide.dev).
+This service is available to all Alcademy members at [app.Alcademy.dev](https://github.com/alcademyorg).
 You'll have access to the following features:
 - User-friendly interface for conducting research
 - Real-time results and generated reports
